@@ -9,6 +9,9 @@ from node_graphics_view import QNEGraphicsView
 class NodeEditorWnd(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._stylesheet_filename = 'qss/nodestyle.qss'
+        self.loadStylesheet(self._stylesheet_filename)
+
         self.initUI()
 
     ##########
@@ -23,7 +26,7 @@ class NodeEditorWnd(QWidget):
         # create Scene
         self.scene = Scene()
 
-        node = Node(self.scene, 'My Awesome Node')
+        node = Node(self.scene, 'My Awesome Node', inputs=[1,1,1], outputs=[1])
 
         # GraphicsView
         self.view = QNEGraphicsView(self.scene.grScene, self)
@@ -32,6 +35,14 @@ class NodeEditorWnd(QWidget):
         self.show()
 
         #self.addDebugContent()
+
+    ##########
+    def loadStylesheet(self, filename):
+        print('Style loading:', filename)
+        file = QFile(filename)
+        file.open(QFile.ReadOnly | QFile.Text)
+        stylesheet = file.readAll()
+        QApplication.instance().setStyleSheet(str(stylesheet, encoding='utf-8'))
 
     ##########
     def addDebugContent(self):

@@ -1,0 +1,2 @@
+QNENodeContentWidget { background: transparent }
+QNENodeContentWidget QLabel { color: #e0e0e0}
