@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from node_graphics_scene import QNEGraphicsScene
+from node_scene import Scene
+from node_node import Node
 from node_graphics_view import QNEGraphicsView
 
 class NodeEditorWnd(QWidget):
@@ -10,6 +11,7 @@ class NodeEditorWnd(QWidget):
         super().__init__(parent)
         self.initUI()
 
+    ##########
     def initUI(self):
         self.setGeometry(200, 200, 800, 640)
         self.setWindowTitle('Node Editor')
@@ -18,15 +20,18 @@ class NodeEditorWnd(QWidget):
         self.layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.layout)
 
-        # GraphicsScene
-        self.grScene = QNEGraphicsScene()
+        # create Scene
+        self.scene = Scene()
+
+        node = Node(self.scene, 'My Awesome Node')
+
         # GraphicsView
-        self.view = QNEGraphicsView(self.grScene, self)
+        self.view = QNEGraphicsView(self.scene.grScene, self)
         self.layout.addWidget(self.view)
         
         self.show()
 
-        self.addDebugContent()
+        #self.addDebugContent()
 
     ##########
     def addDebugContent(self):

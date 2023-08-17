@@ -5,9 +5,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 class QNEGraphicsScene(QGraphicsScene):
-    def __init__(self, parent=None):
+    def __init__(self, scene, parent=None):
         super().__init__(parent)
 
+        self.scene = scene
         # settings
         self._color_bg = QColor('#393939')
         self._color_light = QColor('#2f2f2f')
@@ -20,10 +21,13 @@ class QNEGraphicsScene(QGraphicsScene):
 
         self.gridSize = 20
         self.gridMajor = 5
-        self.scene_width, self.scene_height = 6400, 6400
-        self.setSceneRect(-self.scene_width//2, -self.scene_height//2, self.scene_width, self.scene_height)
 
         self.setBackgroundBrush(self._color_bg)
+    
+    ###############
+    def setGrScene(self, width, height):
+        self.setSceneRect(-width//2, -height//2, width, height)
+
     
     ###############
     def drawBackground(self, painter: QPainter, rect: QRectF) -> None:
