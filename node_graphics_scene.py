@@ -1,11 +1,12 @@
 import math
-from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+import node_scene
+
 class QNEGraphicsScene(QGraphicsScene):
-    def __init__(self, scene, parent=None):
+    def __init__(self, scene:'node_scene.Scene', parent=None):
         super().__init__(parent)
 
         self.scene = scene
@@ -56,7 +57,9 @@ class QNEGraphicsScene(QGraphicsScene):
             else:
                 lines_dark.append(QLine(left, y, right, y))
 
-        painter.setPen(self._pen_light)
-        painter.drawLines(*lines_light)
-        painter.setPen(self._pen_dark)
-        painter.drawLines(*lines_dark)
+        if lines_light:
+            painter.setPen(self._pen_light)
+            painter.drawLines(*lines_light)
+        if lines_dark:
+            painter.setPen(self._pen_dark)
+            painter.drawLines(*lines_dark)

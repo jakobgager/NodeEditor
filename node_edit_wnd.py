@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from node_scene import Scene
 from node_node import Node
 from node_graphics_view import QNEGraphicsView
+from node_edge import *
 
 class NodeEditorWnd(QWidget):
     def __init__(self, parent=None):
@@ -26,7 +27,7 @@ class NodeEditorWnd(QWidget):
         # create Scene
         self.scene = Scene()
 
-        node = Node(self.scene, 'My Awesome Node', inputs=[1,1,1], outputs=[1])
+        self.addNodes()
 
         # GraphicsView
         self.view = QNEGraphicsView(self.scene.grScene, self)
@@ -43,6 +44,17 @@ class NodeEditorWnd(QWidget):
         file.open(QFile.ReadOnly | QFile.Text)
         stylesheet = file.readAll()
         QApplication.instance().setStyleSheet(str(stylesheet, encoding='utf-8'))
+
+    ##########
+    def addNodes(self):
+        node1 = Node(self.scene, 'My Awesome Node 1', inputs=[0,2], outputs=[4])
+        node2 = Node(self.scene, 'My Awesome Node 2', inputs=[0,4,5], outputs=[4])
+        node3 = Node(self.scene, 'My Awesome Node 3', inputs=[1,2,3,0], outputs=[4])
+        node1.setPos(-350, -250)
+        node2.setPos(-75, 0)
+        node3.setPos(200, -150)
+        edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[0], edge_type=EDGE_TYPE_BEZIER)
+        edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[2], edge_type=EDGE_TYPE_BEZIER)
 
     ##########
     def addDebugContent(self):

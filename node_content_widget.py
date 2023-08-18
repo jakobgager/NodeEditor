@@ -6,6 +6,7 @@ class QNENodeContentWidget(QWidget):
 
         self.initUI()
 
+    ##########
     def initUI(self):
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0,0,0,0)

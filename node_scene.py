@@ -1,4 +1,6 @@
 from node_graphics_scene import QNEGraphicsScene
+from node_node import Node
+from node_edge import Edge
 
 class Scene():
     def __init__(self):
@@ -16,18 +18,18 @@ class Scene():
         self.grScene.setGrScene(self.scene_width, self.scene_height)
 
     ##########
-    def addNode(self, node):
+    def addNode(self, node: Node):
         self.nodes.append(node)
 
     ##########
-    def addEdge(self, edge):
+    def addEdge(self, edge: Edge):
         self.edges.append(edge)
     
     
     ##########
-    def removeNode(self, node):
+    def removeNode(self, node: Node):
         self.nodes.remove(node)
 
     ##########
-    def removeEdge(self, edge):
+    def removeEdge(self, edge: Edge):
         self.edges.remove(edge)

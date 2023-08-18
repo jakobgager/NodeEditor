@@ -2,8 +2,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+import node_node
+
 class QNEGraphicsNode(QGraphicsItem):
-    def __init__(self, node, parent=None):
+    def __init__(self, node:'node_node.Node', parent=None):
         super().__init__(parent) 
         self.node = node
         self.content = self.node.content
@@ -34,7 +36,11 @@ class QNEGraphicsNode(QGraphicsItem):
 
         self.initUI()
 
-    
+    ##########
+    def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        super().mouseMoveEvent(event)
+        self.node.updateConnectedEdges()
+
     ##########
     @property
     def title(self): return self._title
