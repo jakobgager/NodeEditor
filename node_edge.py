@@ -1,6 +1,8 @@
 import node_socket
 from node_graphics_edge import *
 
+__all__ = ['EDGE_TYPE_DIRECT', 'EDGE_TYPE_BEZIER', 'Edge']
+
 EDGE_TYPE_DIRECT = 1
 EDGE_TYPE_BEZIER = 2
 
