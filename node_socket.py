@@ -13,10 +13,14 @@ class Socket():
         self.index = index
         self.position = position
         self.socket_type = socket_type
-        self.grSocket = QNEGraphicsSocket(self.node.grNode, self.socket_type)
+        self.grSocket = QNEGraphicsSocket(self, self.socket_type)
         self.grSocket.setPos(*self.node.getSocketPosition(index, position))
         
         self.edge = None
+
+    ##########
+    def __str__(self):
+        return 'Socket <{0}>'.format(hex(id(self)))
 
     ##########
     def getSocketPosition(self):

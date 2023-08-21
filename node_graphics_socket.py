@@ -2,9 +2,12 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+import node_socket
+
 class QNEGraphicsSocket(QGraphicsItem):
-    def __init__(self, parent=None, socket_type=1):
-        super().__init__(parent)
+    def __init__(self, socket:'node_socket.Socket', socket_type=1):
+        self.socket = socket
+        super().__init__(socket.node.grNode)
 
         self.radius = 6.0
         self.outline_width = 1.0

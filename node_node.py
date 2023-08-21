@@ -24,6 +24,10 @@ class Node():
             self.outputs.append(Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item))
     
     ##########
+    def __str__(self):
+        return 'Node <{0}> - {1}'.format(hex(id(self)), self.title)
+
+    ##########
     @property
     def pos(self):
         return self.grNode.pos()   #QPoint .. pos.x
