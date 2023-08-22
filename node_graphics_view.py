@@ -34,6 +34,7 @@ class QNEGraphicsView(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setDragMode(QGraphicsView.RubberBandDrag)
 
     ##########
     def mousePressEvent(self, event: QMouseEvent) -> None:
@@ -80,6 +81,15 @@ class QNEGraphicsView(QGraphicsView):
     def leftMouseButtonPress(self, event:QMouseEvent):
         item = self.getItemAtClick(event)
         self.last_lmb_click_scene_pos = self.mapToScene(event.pos())
+        if DEBUG: print('LMB Click', item, self.debug_modifiers(event))
+        if hasattr(item, 'node') or isinstance(item, QNEGraphicsEdge) or item is None:
+            if event.modifiers() & Qt.ShiftModifier:
+                event.ignore()
+                fakeEvent = QMouseEvent(QEvent.MouseButtonPress, event.localPos(), event.screenPos(),
+                                        Qt.LeftButton, event.buttons() | Qt.LeftButton, 
+                                        event.modifiers() | Qt.ControlModifier)
+                super().mousePressEvent(fakeEvent)
+                return
         if type(item) is QNEGraphicsSocket:
             if self.mode == MODE_NOOP:
                 self.mode = MODE_EDGE_DRAG
@@ -96,6 +106,14 @@ class QNEGraphicsView(QGraphicsView):
         item = self.getItemAtClick(event)
         self.new_lmb_click_scene_pos = self.mapToScene(event.pos())
         dist_scene = self.new_lmb_click_scene_pos - self.last_lmb_click_scene_pos
+        if hasattr(item, 'node') or isinstance(item, QNEGraphicsEdge) or item is None:
+            if event.modifiers() & Qt.ShiftModifier:
+                event.ignore()
+                fakeEvent = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
+                                        Qt.LeftButton, Qt.NoButton, 
+                                        event.modifiers() | Qt.ControlModifier)
+                super().mouseReleaseEvent(fakeEvent)
+                return
         if self.mode == MODE_EDGE_DRAG:
             if (dist_scene.x()**2 + dist_scene.y()**2) > EDGE_DRAG_START_TRESHOLD**2:
                 res = self.edgeDragEnd(item)
@@ -132,6 +150,14 @@ class QNEGraphicsView(QGraphicsView):
             self.dragEdge.grEdge.setDestination(pos.x(), pos.y())
             self.dragEdge.grEdge.update()
         super().mouseMoveEvent(event)
+
+    ##########
+    def debug_modifiers(self, event:QEvent):
+        out = 'MODS: '
+        if event.modifiers() & Qt.ShiftModifier: out += "SHIFT "
+        if event.modifiers() & Qt.AltModifier: out += "ALT "
+        if event.modifiers() & Qt.ControlModifier: out += "CTRL "
+        return out
 
     ##########
     def getItemAtClick(self, event:QMouseEvent):
