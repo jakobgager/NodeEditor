@@ -26,6 +26,7 @@ class QNEGraphicsView(QGraphicsView):
         self.zoomStep = 1
         self.zoomRange = [-6, 6]
         self.mode = MODE_NOOP
+        self.editingFlag = False
 
     ##########
     def initUI(self):
@@ -152,6 +153,22 @@ class QNEGraphicsView(QGraphicsView):
         super().mouseMoveEvent(event)
 
     ##########
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key_Delete:
+            if not self.editingFlag:
+                self.deleteSelected()
+                return
+        super().keyPressEvent(event)
+
+    ##########
+    def deleteSelected(self):
+        for item in self.grScene.selectedItems():
+            if isinstance(item, QNEGraphicsEdge):
+                item.edge.remove()
+            elif hasattr(item, 'node'):
+                item.node.remove()
+
+    ##########
     def debug_modifiers(self, event:QEvent):
         out = 'MODS: '
         if event.modifiers() & Qt.ShiftModifier: out += "SHIFT "
@@ -179,17 +196,18 @@ class QNEGraphicsView(QGraphicsView):
         """return True if skip the rest of the code"""
         self.mode = MODE_NOOP
         if type(item) is QNEGraphicsSocket:
-            if DEBUG: print('View::edgeDragEnd ~   assign End Socket', item.socket)
-            if item.socket.hasEdge():
-                item.socket.edge.remove()
-            if self.previousEdge is not None:
-                self.previousEdge.remove()
-            self.dragEdge.start_socket = self.last_start_socket
-            self.dragEdge.end_socket = item.socket
-            self.dragEdge.start_socket.setConnectedEdge(self.dragEdge)
-            self.dragEdge.end_socket.setConnectedEdge(self.dragEdge)
-            self.dragEdge.updatePositions()
-            return True
+            if item.socket != self.last_start_socket:
+                if DEBUG: print('View::edgeDragEnd ~   assign End Socket', item.socket)
+                if item.socket.hasEdge():
+                    item.socket.edge.remove()
+                if self.previousEdge is not None:
+                    self.previousEdge.remove()
+                self.dragEdge.start_socket = self.last_start_socket
+                self.dragEdge.end_socket = item.socket
+                self.dragEdge.start_socket.setConnectedEdge(self.dragEdge)
+                self.dragEdge.end_socket.setConnectedEdge(self.dragEdge)
+                self.dragEdge.updatePositions()
+                return True
 
         if DEBUG: print('View::edgeDragEnd ~ End dragging edge')
         self.dragEdge.remove()

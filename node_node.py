@@ -9,7 +9,7 @@ class Node():
         self.scene = scene
         self.title = title
         
-        self.content = QNENodeContentWidget()
+        self.content = QNENodeContentWidget(self)
         self.grNode = QNEGraphicsNode(self)
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
@@ -53,3 +53,13 @@ class Node():
         for socket in self.inputs + self.outputs:
             if socket.hasEdge():
                 socket.edge.updatePositions()
+    
+    ##########
+    def remove(self):
+        print('Removing Node', self)
+        for socket in self.inputs + self.outputs:
+            if socket.hasEdge():
+                socket.edge.remove()
+        self.scene.grScene.removeItem(self.grNode)
+        self.grNode = None
+        self.scene.removeNode(self)

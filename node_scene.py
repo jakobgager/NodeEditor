@@ -32,4 +32,5 @@ class Scene():
 
     ##########
     def removeEdge(self, edge: Edge):
-        self.edges.remove(edge)
+        if edge in self.edges:
+            self.edges.remove(edge)
