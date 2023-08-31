@@ -184,6 +184,11 @@ class QNEGraphicsView(QGraphicsView):
             if not self.editingFlag:
                 self.deleteSelected()
                 return
+        elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
+            self.grScene.scene.saveToFile('graph.json')
+        elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
+            self.grScene.scene.loadFromFile('graph.json')
+
         super().keyPressEvent(event)
 
     ##########

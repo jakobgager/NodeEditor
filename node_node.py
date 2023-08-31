@@ -1,11 +1,15 @@
+from collections import OrderedDict
+from typing import List
+
+from node_serializable import Serializable
 from node_graphics_node import QNEGraphicsNode
 from node_content_widget import QNENodeContentWidget
 from node_socket import *
-from typing import List
 import node_scene
 
-class Node():
+class Node(Serializable):
     def __init__(self, scene:'node_scene.Scene', title='Undefined Node', inputs=[], outputs=[]):
+        super().__init__()
         self.scene = scene
         self.title = title
         
@@ -63,3 +67,24 @@ class Node():
         self.scene.grScene.removeItem(self.grNode)
         self.grNode = None
         self.scene.removeNode(self)
+
+    ##########
+    def serialize(self):
+        inputs, outputs = [], []
+        for socket in self.inputs:
+            inputs.append(socket.serialize())
+        for socket in self.outputs:
+            outputs.append(socket.serialize())
+        return OrderedDict([
+            ('id', self.id),
+            ('title', self.title),
+            ('pos_x', self.grNode.scenePos().x()), 
+            ('pos_y', self.grNode.scenePos().y()), 
+            ('inputs', inputs),
+            ('outputs', outputs),
+            ('content', self.content.serialize())
+        ])
+    
+    ##########
+    def deserialize(self, data, hashmap={}):
+        return False

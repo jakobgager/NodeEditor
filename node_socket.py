@@ -1,3 +1,6 @@
+from collections import OrderedDict
+
+from node_serializable import Serializable
 import node_node
 import node_edge
 from node_graphics_socket import QNEGraphicsSocket
@@ -7,8 +10,9 @@ LEFT_BOTTOM = 2
 RIGHT_TOP = 3
 RIGHT_BOTTOM = 4
 
-class Socket():
+class Socket(Serializable):
     def __init__(self, node:'node_node.Node', index=0, position=LEFT_TOP, socket_type=1):
+        super().__init__()
         self.node = node
         self.index = index
         self.position = position
@@ -33,3 +37,16 @@ class Socket():
     ##########
     def hasEdge(self):
         return self.edge is not None
+
+    ##########
+    def serialize(self):
+        return OrderedDict([
+            ('id', self.id),
+            ('index', self.index), 
+            ('position', self.position),
+            ('socket_type', self.socket_type)
+        ])
+    
+    ##########
+    def deserialize(self, data, hashmap={}):
+        return False

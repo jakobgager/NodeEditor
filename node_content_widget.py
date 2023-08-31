@@ -1,9 +1,11 @@
+from collections import OrderedDict
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+from node_serializable import Serializable
 import node_node
 
-class QNENodeContentWidget(QWidget):
+class QNENodeContentWidget(QWidget, Serializable):
     def __init__(self, node: 'node_node.Node', parent=None):
         self.node = node
         super().__init__(parent)
@@ -23,6 +25,17 @@ class QNENodeContentWidget(QWidget):
     ##########
     def setEditingFlag(self, value):
         self.node.scene.grScene.views()[0].editingFlag = value
+
+    ##########
+    def serialize(self):
+        return OrderedDict([
+            
+        ])
+
+    ##########
+    def deserializable(self, data, hashmap={}):
+        return False
+
 
 
 class QNETextEdit(QTextEdit):
