@@ -11,10 +11,11 @@ class Node(Serializable):
     def __init__(self, scene:'node_scene.Scene', title='Undefined Node', inputs=[], outputs=[]):
         super().__init__()
         self.scene = scene
-        self.title = title
+        self._title = title   # dummytitle required for graphics node initialization
         
         self.content = QNENodeContentWidget(self)
         self.grNode = QNEGraphicsNode(self)
+        self.title = title
         self.scene.addNode(self)
         self.scene.grScene.addItem(self.grNode)
 
@@ -39,6 +40,16 @@ class Node(Serializable):
     ##########
     def setPos(self, x, y):
         self.grNode.setPos(x, y)
+
+    ##########
+    @property
+    def title(self): return self._title
+
+    ##########
+    @title.setter
+    def title(self, value:str):
+        self._title = value
+        self.grNode.title = self._title
 
     ##########
     def getSocketPosition(self, index, position):
@@ -87,4 +98,25 @@ class Node(Serializable):
     
     ##########
     def deserialize(self, data, hashmap={}):
-        return False
+        self.id = data['id']
+        hashmap[data['id']] = self
+
+        self.title = data['title']
+        self.setPos(data['pos_x'], data['pos_y'])
+        data['inputs'].sort(key=lambda socket: socket['index'] + socket['position']*10000)
+        data['outputs'].sort(key=lambda socket: socket['index'] + socket['position']*10000)
+
+        self.inputs = [] # type: List[Socket]
+        for socket_data in data['inputs']:
+            new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'], 
+                                socket_type=socket_data['socket_type'])
+            new_socket.deserialize(socket_data, hashmap)
+            self.inputs.append(new_socket)
+
+        self.outputs = [] # type: List[Socket]
+        for socket_data in data['outputs']:
+            new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'], 
+                                socket_type=socket_data['socket_type'])
+            new_socket.deserialize(socket_data, hashmap)
+            self.outputs.append(new_socket)
+        return True

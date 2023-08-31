@@ -41,6 +41,10 @@ class Scene(Serializable):
         if edge in self.edges:
             self.edges.remove(edge)
 
+    ##########
+    def clear(self):
+        while len(self.nodes) > 0:
+            self.nodes[0].remove()
 
     ##########
     def saveToFile(self, filename):
@@ -52,7 +56,7 @@ class Scene(Serializable):
     def loadFromFile(self, filename):
         with open(filename, 'r') as file:
             raw_data = file.read()
-            data = json.loads(raw_data, encoding='utf-8')
+            data = json.loads(raw_data)
             self.deserialize(data)
 
     ##########
@@ -73,4 +77,14 @@ class Scene(Serializable):
     ##########
     def deserialize(self, data, hashmap={}):
         print('Deserialization data', data)
-        return False
+
+        self.clear()
+        hashmap = {}
+        # create node
+        for node_data in data['nodes']:
+            Node(self).deserialize(node_data, hashmap=hashmap)
+
+        # create edges
+        for edge_data in data['edges']:
+            Edge(self).deserialize(edge_data, hashmap=hashmap) 
+        return True
