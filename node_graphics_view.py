@@ -133,10 +133,9 @@ class QNEGraphicsView(QGraphicsView):
                 res = self.edgeDragEnd(item)
                 if res: return
         if self.mode == MODE_EDGE_CUT:
-            print('release')
             self.cutIntersectingEdges()
             self.cutline.line_points = []
-            self.cutline.update()
+            self.grScene.update()
             QApplication.setOverrideCursor(Qt.ArrowCursor)
             self.mode = MODE_NOOP
             return
@@ -175,7 +174,7 @@ class QNEGraphicsView(QGraphicsView):
         if self.mode == MODE_EDGE_CUT:
             pos = self.mapToScene(event.pos())
             self.cutline.line_points.append(pos)
-            self.cutline.update()
+            self.grScene.update()
 
         super().mouseMoveEvent(event)
 
