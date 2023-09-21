@@ -28,22 +28,22 @@ class Edge(Serializable):
 
     ##########
     @property
-    def start_socket(self) -> node_socket.Socket: return self._start_socket
+    def start_socket(self) -> 'node_socket.Socket': return self._start_socket
 
     ##########
     @start_socket.setter
-    def start_socket(self, value: node_socket.Socket):
+    def start_socket(self, value: 'node_socket.Socket'):
         self._start_socket = value
         if self.start_socket is not None:
             self.start_socket.edge = self
 
     ##########
     @property
-    def end_socket(self) -> node_socket.Socket: return self._end_socket
+    def end_socket(self) -> 'node_socket.Socket': return self._end_socket
 
     ##########
     @end_socket.setter
-    def end_socket(self, value: node_socket.Socket):
+    def end_socket(self, value: 'node_socket.Socket'):
         self._end_socket = value
         if self.end_socket is not None:
             self.end_socket.edge = self
