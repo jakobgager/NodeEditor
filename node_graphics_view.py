@@ -188,8 +188,22 @@ class QNEGraphicsView(QGraphicsView):
             self.grScene.scene.saveToFile('graph.json')
         elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
             self.grScene.scene.loadFromFile('graph.json')
-
-        super().keyPressEvent(event)
+        elif event.key() == Qt.Key_1:
+            self.grScene.scene.history.storeHistory('Item A')
+        elif event.key() == Qt.Key_2:
+            self.grScene.scene.history.storeHistory('Item B')
+        elif event.key() == Qt.Key_3:
+            self.grScene.scene.history.storeHistory('Item C')
+        elif event.key() == Qt.Key_4:
+            self.grScene.scene.history.undo()
+        elif event.key() == Qt.Key_5:
+            self.grScene.scene.history.redo()
+        elif event.key() == Qt.Key_H:
+            print('History:   len({0})'.format(len(self.grScene.scene.history.history_stack)),
+                '-- current step:', self.grScene.scene.history.history_current_step)
+            print(self.grScene.scene.history.history_stack)
+        else:
+            super().keyPressEvent(event)
 
     ##########
     def deleteSelected(self):
